@@ -194,7 +194,7 @@ with tab_own:
                         st.code(f"{r['linea']}\n\n{r['texto_nuevo']}", language=None, wrap_lines=True)
 
                 elif key == "news":
-                    F = r.get("fuentes", {})
+                    F = r.get("fuentes") if isinstance(r.get("fuentes"), dict) else {}
                     if r.get("hay_novedades"):
                         st.success(r.get("resumen") or "Hay novedades.")
                     else:
