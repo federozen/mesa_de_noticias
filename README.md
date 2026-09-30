@@ -17,11 +17,11 @@ Herramientas de redacción a partir de un link. No escribe notas desde cero: tra
 Si un sitio bloquea la lectura, la app prueba un lector alternativo; si igual falla, se puede pegar el texto.
 
 ## Modelos
-Cadena de respaldo automática: **Groq → Cerebras → OpenRouter → Gemini → (Claude)**. Si uno se cae, se queda sin cuota o devuelve algo roto, pasa al siguiente. La barra lateral muestra qué proveedores están activos y cada resultado indica qué modelo lo produjo.
+Cadena de respaldo automática: **Groq → OpenRouter → Mistral → GitHub Models → Cerebras → Gemini → (Claude)**. Si uno se cae, se queda sin cuota o devuelve algo roto, pasa al siguiente. La barra lateral muestra qué proveedores están activos y cada resultado indica qué modelo lo produjo.
 
 Modos: *Gratis*, *Gratis y Claude si todo falla* (recomendado) o *Claude primero*.
 
-Todos gratis y sin tarjeta: Groq (console.groq.com), Cerebras (cloud.cerebras.ai), OpenRouter (openrouter.ai). Con Groq sólo ya funciona; sumar Cerebras u OpenRouter evita cortes por el límite por minuto del plan gratis de Groq.
+Gratis y sin tarjeta: Groq (console.groq.com), OpenRouter (openrouter.ai), Mistral (console.mistral.ai, plan Experiment) y GitHub Models (token de GitHub con permiso *Models: read*). Cerebras ahora pide tarjeta. Con Groq solo ya funciona; sumar uno o dos más evita cortes por el límite por minuto del plan gratis de Groq.
 
 ## Publicar en Streamlit Community Cloud (gratis)
 1. Subí esta carpeta a un repositorio de GitHub.

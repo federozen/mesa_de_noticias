@@ -89,7 +89,7 @@ with st.sidebar:
     if status.get("Claude"):
         opts = {"Gratis, y Claude si todo falla": "gratis+premium", "Gratis": "gratis", "Claude primero (premium)": "premium"}
     mode = opts[st.radio("Modo", list(opts), label_visibility="collapsed")]
-    st.caption("Orden de respaldo: Groq → Cerebras → OpenRouter → Gemini" + (" → Claude" if status.get("Claude") else ""))
+    st.caption("Orden de respaldo: " + " → ".join(k for k in status if k != "Claude") + (" → Claude" if status.get("Claude") else ""))
     for name, ok in status.items():
         st.markdown(f"{'🟢' if ok else '⚪'} {name}" + ("" if ok else " <span class='meta'>(sin clave)</span>"),
                     unsafe_allow_html=True)

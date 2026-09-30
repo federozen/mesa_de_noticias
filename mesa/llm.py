@@ -1,7 +1,7 @@
 """
 Router de modelos con cadena de respaldo.
 
-Gratis: Groq -> Cerebras -> OpenRouter -> Gemini.  Premium: Anthropic (Claude).
+Gratis: Groq -> OpenRouter -> Mistral -> GitHub Models -> Cerebras -> Gemini.  Premium: Anthropic (Claude).
 Si un proveedor falla (cuota, 429, caída, JSON roto) se pasa al siguiente.
 """
 from __future__ import annotations
@@ -31,7 +31,8 @@ class Provider:
     extra_headers: dict = field(default_factory=dict)
 
     def __post_init__(self):
-        self.base_url = secret(self.key_name.replace("_API_KEY", "_BASE_URL"), self.base_url)
+        prefix = self.key_name.replace("_API_KEY", "").replace("_TOKEN", "")
+        self.base_url = secret(f"{prefix}_BASE_URL", self.base_url)
 
     @property
     def key(self) -> str:
@@ -48,14 +49,22 @@ def providers() -> list[Provider]:
                  {"fast": secret("GROQ_FAST_MODEL", "openai/gpt-oss-20b"),
                   "strong": secret("GROQ_STRONG_MODEL", "openai/gpt-oss-120b")},
                  max_input_chars=22000),
-        Provider("CEREBRAS_API_KEY", "Cerebras", "openai", "https://api.cerebras.ai/v1",
-                 {"fast": secret("CEREBRAS_MODEL", "gpt-oss-120b"),
-                  "strong": secret("CEREBRAS_MODEL", "gpt-oss-120b")},
-                 max_input_chars=16000),  # el plan gratis tiene contexto de ~8k tokens
         Provider("OPENROUTER_API_KEY", "OpenRouter", "openai", "https://openrouter.ai/api/v1",
                  {"fast": secret("OPENROUTER_MODEL", "openrouter/free"),
                   "strong": secret("OPENROUTER_MODEL", "openrouter/free")},
                  extra_headers={"HTTP-Referer": "https://streamlit.app", "X-Title": "Mesa Notas Vivas"}),
+        Provider("MISTRAL_API_KEY", "Mistral", "openai", "https://api.mistral.ai/v1",
+                 {"fast": secret("MISTRAL_FAST_MODEL", "mistral-small-latest"),
+                  "strong": secret("MISTRAL_STRONG_MODEL", "mistral-large-latest")},
+                 max_input_chars=30000),
+        Provider("GITHUB_TOKEN", "GitHub Models", "openai", "https://models.github.ai/inference",
+                 {"fast": secret("GITHUB_FAST_MODEL", "openai/gpt-4.1-mini"),
+                  "strong": secret("GITHUB_STRONG_MODEL", "openai/gpt-4.1")},
+                 max_input_chars=14000),  # plan gratis: 8k tokens de entrada por pedido
+        Provider("CEREBRAS_API_KEY", "Cerebras", "openai", "https://api.cerebras.ai/v1",
+                 {"fast": secret("CEREBRAS_MODEL", "gpt-oss-120b"),
+                  "strong": secret("CEREBRAS_MODEL", "gpt-oss-120b")},
+                 max_input_chars=16000),
         Provider("GEMINI_API_KEY", "Gemini", "gemini", "https://generativelanguage.googleapis.com/v1beta",
                  {"fast": secret("GEMINI_FAST_MODEL", "gemini-3.5-flash-lite"),
                   "strong": secret("GEMINI_STRONG_MODEL", "gemini-3.8-flash")}),
